@@ -1,0 +1,28 @@
+Source: netqmail
+Section: mail
+Priority: extra
+Maintainer: Krzysztof Gajdemski <songo@debian.org.pl>
+Build-Depends: qmail-uids-gids (>> 1.06), groff-base, libssl-dev (>> 0.9.8), quilt
+Standards-Version: 3.9.1
+
+Package: netqmail
+Architecture: any
+Depends: ${shlibs:Depends}, qmail-uids-gids (>> 1.06)
+Provides: qmail
+Conflicts: qmail
+Recommends: qmail-run (>= 2.0.0)
+Suggests: qmail-tools
+Description: a secure, reliable, efficient, simple message transfer agent
+ qmail is meant as a replacement for the entire sendmail-binmail system on
+ typical Internet-connected UNIX hosts.
+ .
+ This package is based on the netqmail distribution of qmail, put
+ together by a motley krewe of qmail contributors (see the README).
+ It is derived from Daniel Bernstein's qmail-1.03 plus bug fixes,
+ a few feature enhancements, and some documentation.
+
+Package: qmail-uids-gids
+Architecture: all
+Depends: passwd, adduser
+Description: user ids and group ids for qmail
+ This package is mandatory for building and running the qmail package.

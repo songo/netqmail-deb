@@ -1,0 +1,60 @@
+netqmail for Debian
+===================
+
+This is a reworked version of Debian qmail package made by Gerrit Pape.
+This version uses Netqmail Qmail distribution as a base (instead of
+Qmail-1.03) which is a biggest change. See:
+http://qmail.org/netqmail/
+
+Besides all patches available in Netqmail, some additional ones are
+provided here:
+  * Qmail-auth 0.71 by Erwin Hoffmann (updates the previous work of Krysztof
+    Dabrowski and Bjoern Kalkbrenner). See:
+    http://www.fehcom.de/qmail/smtpauth.html
+  * Qmail-tls 20110119 by Frederik Vermeulen. See:
+    http://inoa.net/qmail-tls/
+  * Qmail force-tls 2011.07.27 by Roberto Puzzanghera. See:
+    http://notes.sagredo.eu/sites/notes.sagredo.eu/files/qmail/patches/roberto-netqmail-1.06_force-tls.patch-2011.07.27
+  * qmail-realrcptto (see: http://code.dogmap.org./qmail/#realrcptto)
+    integrated integrated into qmail-smtpd-realrcptto and
+    qmail-qmtpd-realrcptto by Gerrit Pape.
+
+  -- Krzysztof Gajdemski <songo@debian.org.pl> Thu Sep 29 23:29:27 CEST 2011
+
+Original README by Gerrit Pape
+==============================
+
+qmail for Debian
+----------------
+
+This package is based on the netqmail distribution of qmail put together
+by a motley krewe of qmail contributors (see the README).  It is derived
+from Daniel Bernstein's qmail-1.03 plus bug fixes, a few feature
+enhancements, and some documentation.
+
+This package does not install qmail as a running MTA.
+
+To enable qmail as MTA on Debian, you need to install the qmail-run
+package, or follow the instructions in [0]Life with qmail, chapter 2.8.
+
+With this package, qmail is set up according to [0]Life with qmail up to
+chapter 2.7., with the following exceptions:
+
+qmail's home on Debian is /var/lib/qmail/, not /var/qmail/, as the latter
+does not comply with the FHS.  To be consistent with existing programs and
+documentation, it is recommended to create a compatibility symlink
+/var/qmail -> /var/lib/qmail after installing this package, do
+
+ # ln -s /var/lib/qmail /var/qmail
+
+daemontools' (and runit's) directory for supervised services on Debian is
+/etc/service/, not /service/.  To be consistent with existing programs and
+documentation, it is recommended to create a compatibility symlink
+/service -> /etc/service.  If not yet done, do
+
+ # ln -s /etc/service /service
+
+
+[0] http://lifewithqmail.org/lwq.html
+
+ -- Gerrit Pape <pape@smarden.org>, Wed, 23 Apr 2008 01:47:25 +0000

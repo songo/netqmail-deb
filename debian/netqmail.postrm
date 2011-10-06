@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+rm -f /var/lib/qmail/queue/lock/trigger
+
+test "$1" = 'purge' || exit 0
+rm -f /etc/qmail/users/*
+rmdir /etc/qmail/users || :
+rm -f /etc/qmail/*
+rmdir /etc/qmail || :

@@ -1,0 +1,11 @@
+--- a/qmail-remote.c
++++ b/qmail-remote.c
+@@ -30,6 +30,8 @@
+ #include "timeoutwrite.h"
+ #include "base64.h"
+ 
++#define DEBUG
++
+ #define HUGESMTPTEXT 5000
+ 
+ #define PORT_SMTP 25 /* silly rabbit, /etc/services is for users */

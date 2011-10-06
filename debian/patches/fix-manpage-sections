@@ -1,0 +1,25 @@
+Fix some bad section numbers in manpages.
+--- a/cdb.3
++++ b/cdb.3
+@@ -1,4 +1,4 @@
+-.TH cdb 3
++.TH cdb 3qmail
+ .SH NAME
+ cdb \- read from a constant database
+ .SH SYNTAX
+--- a/error.3
++++ b/error.3
+@@ -1,4 +1,4 @@
+-.TH error 3
++.TH error 3qmail
+ .SH NAME
+ error \- syscall error codes
+ .SH SYNTAX
+--- a/mbox.5
++++ b/mbox.5
+@@ -1,4 +1,4 @@
+-.TH mbox 5
++.TH mbox 5qmail
+ .SH "NAME"
+ mbox \- file containing mail messages
+ .SH "INTRODUCTION"

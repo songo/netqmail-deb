@@ -1,0 +1,121 @@
+#!/usr/bin/make -f
+
+include /usr/share/quilt/quilt.make
+
+STRIP =strip
+ifneq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+  STRIP =: nostrip
+endif
+
+QMAIL='netqmail'
+QMAILUIDSGIDS='qmail-uids-gids'
+
+DIR=$(shell pwd)/debian
+QMAILDIR=$(DIR)/$(QMAIL)
+QMAILUIDSGIDSDIR=$(DIR)/$(QMAILUIDSGIDS)
+
+build: deb-checkdir build-stamp
+build-stamp: patch
+	test -r conf-qmail'{orig}' || cp conf-qmail conf-qmail'{orig}'
+	echo /var/lib/qmail >conf-qmail
+	$(MAKE) it man
+	$(MAKE) qmail-smtpd-realrcptto qmail-qmtpd-realrcptto
+	touch build-stamp
+
+clean: clean-patched unpatch
+clean-patched: deb-checkdir deb-checkuid
+	$(MAKE) clean
+	test ! -r conf-qmail'{orig}' || mv -f conf-qmail'{orig}' conf-qmail
+	rm -f build-stamp
+	rm -rf '$(QMAILDIR)' '$(QMAILUIDSGIDSDIR)'
+	rm -f debian/files debian/substvars changelog
+
+install: install-arch install-indep
+install-arch: deb-checkdir deb-checkuid build-stamp
+	rm -rf '$(QMAILDIR)'
+	install -d -m0755 '$(QMAILDIR)'/var/lib/qmail
+	test -r conf-qmail'{orig}' || cp conf-qmail conf-qmail'{orig}'
+	echo '$(QMAILDIR)'/var/lib/qmail >conf-qmail
+	rm -f auto_qmail.[co]
+	sleep 1
+	$(MAKE) install instcheck
+	./install
+	./instcheck
+	install -m755 -oroot -gqmail qmail-smtpd-realrcptto \
+	  '$(QMAILDIR)'/var/lib/qmail/bin/qmail-smtpd-realrcptto
+	install -m755 -oroot -gqmail qmail-qmtpd-realrcptto \
+	  '$(QMAILDIR)'/var/lib/qmail/bin/qmail-qmtpd-realrcptto
+	for i in bouncesaying condredirect except forward maildir2mbox \
+	 maildirmake maildirwatch predate preline qbiff qmail-clean \
+	 qmail-getpw qmail-inject qmail-local qmail-lspawn qmail-newmrh \
+	 qmail-newu qmail-pop3d qmail-popup qmail-pw2u qmail-qmqpc \
+	 qmail-qmqpd qmail-qmtpd qmail-qread qmail-queue qmail-remote \
+	 qmail-rspawn qmail-send qmail-showctl qmail-smtpd qmail-start \
+	 qmail-tcpok qmail-tcpto qreceipt qsmhook sendmail splogger tcp-env \
+	 qmail-smtpd-realrcptto qmail-qmtpd-realrcptto; \
+	  do $(STRIP) -R .comment -R .note '$(QMAILDIR)'/var/lib/qmail/bin/$$i \
+	    || exit 1; \
+	done
+	install -d -m0755 '$(QMAILDIR)'/usr/bin
+	install -d -m0755 '$(QMAILDIR)'/usr/sbin
+	install -d -m0755 '$(QMAILDIR)'/etc/qmail
+	install -m0755 config-fast '$(QMAILDIR)'/var/lib/qmail/bin/config-fast
+	# move and link binaries
+	for i in bin sbin; do \
+	  for j in `cat debian/$${i}`; do \
+	    mv -f '$(QMAILDIR)'/var/lib/qmail/bin/$${j} '$(QMAILDIR)'/usr/$${i}/$${j} && \
+	    ln -s /usr/$${i}/$${j} '$(QMAILDIR)'/var/lib/qmail/bin/$${j} || exit 1; \
+	  done; \
+	done;
+	mv -f '$(QMAILDIR)'/var/lib/qmail/bin/sendmail '$(QMAILDIR)'/usr/sbin/qmail-sendmail
+	ln -s /usr/sbin/qmail-sendmail '$(QMAILDIR)'/var/lib/qmail/bin/sendmail
+	# docs are in /usr/share/doc/qmail (implicit)
+	rm -rf '$(QMAILDIR)'/var/lib/qmail/doc
+	ln -s /usr/share/doc/qmail '$(QMAILDIR)'/var/lib/qmail/doc
+	# place users/ into /etc/qmail/, link back
+	mv '$(QMAILDIR)'/var/lib/qmail/users '$(QMAILDIR)'/etc/qmail/
+	ln -s /etc/qmail/users '$(QMAILDIR)'/var/lib/qmail/users
+	# control/ is /etc/qmail/
+	rmdir '$(QMAILDIR)'/var/lib/qmail/control
+	ln -s /etc/qmail '$(QMAILDIR)'/var/lib/qmail/control
+	# man pages system-wide
+	rm -rf '$(QMAILDIR)'/var/lib/qmail/man
+	for i in 1 3 5 7 8; do \
+	  install -d -m0755 '$(QMAILDIR)'/usr/share/man/man$$i && \
+	  for j in *.$$i; do \
+	    install -m0644 $$j '$(QMAILDIR)'/usr/share/man/man$$i/ || exit 1; \
+	  done || exit 1; \
+	done
+	for i in cdb.3 error.3 mbox.5; do \
+	  mv '$(QMAILDIR)'/usr/share/man/man$${i##*.}/$$i \
+	    '$(QMAILDIR)'/usr/share/man/man$${i##*.}/$${i}qmail || exit 1; \
+	done
+	gzip -9 '$(QMAILDIR)'/usr/share/man/man?/*
+	# changelog
+	rm -f changelog && ln -s CHANGES changelog
+	rm -f '$(QMAILDIR)'/var/lib/qmail/queue/lock/trigger
+	# lintian overrides
+	for file in '$(DIR)'/*.lintian.overrides; do \
+	  dname=`basename $$file .lintian.overrides`; \
+          install -d '$(DIR)'/$$dname/usr/share/lintian/overrides/; \
+          cp $$file '$(DIR)/'$$dname/usr/share/lintian/overrides/$$dname; \
+        done
+	
+install-indep: deb-checkdir deb-checkuid
+	# qmail-uids-gids
+	rm -rf '$(QMAILUIDSGIDSDIR)'
+	install -d -m0755 '$(QMAILUIDSGIDSDIR)'
+	rm -f changelog && ln -s CHANGES changelog
+
+binary: binary-indep binary-arch
+binary-arch: install-arch $(QMAIL).deb
+	dpkg-shlibdeps '$(QMAILDIR)'/usr/bin/* '$(QMAILDIR)'/usr/sbin/*
+	dpkg-gencontrol -isp -p'$(QMAIL)' -P'$(QMAILDIR)'
+	dpkg -b '$(QMAILDIR)' ..
+binary-indep: install-indep $(QMAILUIDSGIDS).deb
+	dpkg-gencontrol -isp -p'$(QMAILUIDSGIDS)' -P'$(QMAILUIDSGIDSDIR)'
+	dpkg -b '$(QMAILUIDSGIDSDIR)' ..
+
+.PHONY: build clean clean-patched install binary-indep binary-arch binary
+
+include debian/implicit

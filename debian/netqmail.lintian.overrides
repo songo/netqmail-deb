@@ -1,0 +1,10 @@
+netqmail: non-standard-dir-perm
+netqmail: executable-is-not-world-readable
+netqmail: setuid-binary usr/sbin/qmail-queue 4711 qmailq/qmail
+netqmail: package-contains-upstream-install-documentation usr/share/doc/netqmail/INSTALL.alias
+netqmail: package-contains-upstream-install-documentation usr/share/doc/netqmail/INSTALL.ctl
+netqmail: package-contains-upstream-install-documentation usr/share/doc/netqmail/INSTALL.ids
+netqmail: package-contains-upstream-install-documentation usr/share/doc/netqmail/INSTALL.maildir
+netqmail: package-contains-upstream-install-documentation usr/share/doc/netqmail/INSTALL.mbox
+netqmail: package-contains-upstream-install-documentation usr/share/doc/netqmail/INSTALL.vsm
+netqmail: non-standard-file-perm var/lib/qmail/queue/lock/sendmutex 0600 != 0644
