@@ -3,7 +3,7 @@ Section: mail
 Priority: extra
 Maintainer: Krzysztof Gajdemski <songo@debian.org.pl>
 Build-Depends: qmail-uids-gids (>> 1.06), groff-base, libssl-dev (>> 0.9.8), quilt
-Standards-Version: 3.9.1
+Standards-Version: 3.9.3
 
 Package: netqmail
 Architecture: any

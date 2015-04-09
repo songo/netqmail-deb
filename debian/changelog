@@ -2,6 +2,7 @@ netqmail (1.06-2~son8) unstable; urgency=low
 
   * Use combined patch for smtp-auth, qmail-tls and force-tls made by
     Roberto Puzzanghera: combined patch for netqmail-1.06 v. 2014.11.20
+  * Bump standards to 3.9.4 
 
  -- Krzysztof Gajdemski <songo@debian.org.pl>  Mon, 23 Mar 2015 15:27:06 -0400
 
