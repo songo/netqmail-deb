@@ -12,7 +12,7 @@ Provides: qmail
 Conflicts: qmail
 Recommends: qmail-run (>= 2.0.0)
 Suggests: qmail-tools
-Description: a secure, reliable, efficient, simple message transfer agent
+Description: Secure, reliable, efficient, simple message transfer agent
  qmail is meant as a replacement for the entire sendmail-binmail system on
  typical Internet-connected UNIX hosts.
  .
