@@ -1,5 +1,3 @@
-qmail-authentication-071
-netqmail-1.06-tls-20110119
-force-tls.patch-2011.10.06
+roberto-netqmail-1.06_auth_tls_force-tls.patch-2014.11.20
 add-realrcppto-functionality-through-qmail-mtpd-real
 fix-manpage-sections
